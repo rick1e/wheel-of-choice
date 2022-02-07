@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 
 function App() {
 
-  const [inputCountState, setInputCountState] = useState(0);
   const [inputList, setInputListState] = useState([{ option: "first" }]);
 
   var wordList = [
@@ -204,7 +203,7 @@ function App() {
 
       <canvas id="myCanvas" width="400" height="400" style={{ border: '1px solid #000000' }}>
       </canvas>
-      <button id="spinButton" onClick={handleSpin} /*disabled={inputCountState < 3}*/>
+      <button id="spinButton" onClick={handleSpin} disabled={inputList.length < 3}>
         Spin wheel
       </button>
 
