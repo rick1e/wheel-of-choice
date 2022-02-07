@@ -2,10 +2,45 @@ import './App.css';
 import React, { useState } from 'react';
 
 
-
 function App() {
 
   const [inputCountState, setInputCountState] = useState(0);
+  const [inputList, setInputListState] = useState([{ option: "first" }]);
+
+  var wordList = [
+    "rifle",
+    "move",
+    "back",
+    "pie",
+    "railway",
+    "street",
+    "shelf",
+    "dinner",
+    "pen",
+    "rod",
+    "border",
+    "rings",
+  ]
+
+  let handleChange = (i, e) => {
+    let newInputList = [...inputList];
+    newInputList[i][e.target.name] = e.target.value;
+    setInputListState(newInputList);
+  }
+
+  function removeOption(index) {
+    let newInputList = [...inputList];
+    newInputList.splice(index, 1);
+    setInputListState(newInputList)
+  }
+
+  function addOption() {
+    var newInputList = [...inputList, { option: wordList[Math.floor(Math.random() * wordList.length)] }]
+    setInputListState(newInputList);
+
+  }
+
+
 
   var sectorCount = 2;
   var width = 200;
@@ -39,20 +74,7 @@ function App() {
     "Test 12"
   ]
 
-  var wordList = [
-    "rifle",
-    "move",
-    "back",
-    "pie",
-    "railway",
-    "street",
-    "shelf",
-    "dinner",
-    "pen",
-    "rod",
-    "border",
-    "rings",
-  ]
+
   var count = 0;
   var spinSpeed = 1;
   var selectedSector = Math.floor(Math.random() * sectorCount);
@@ -133,42 +155,43 @@ function App() {
 
     init();
   }
-
-  function addOption() {
-    var optionDiv = document.getElementById('options');
-    var elemInputs = document.getElementsByTagName('input');
-    var inputCount = elemInputs.length;
-    var elemInputDiv = document.createElement('div');
-    var elemInput = document.createElement('input');
-    var elemButton = document.createElement('button');
-
-    elemInput.value = wordList[Math.floor(Math.random() * wordList.length)]
-
-    elemButton.innerHTML = "Remove";
-    elemButton.onclick = function () {
-      this.parentElement.remove();
+  /*
+    function addOption() {
+      var optionDiv = document.getElementById('options');
       var elemInputs = document.getElementsByTagName('input');
       var inputCount = elemInputs.length;
-      setInputCountState(inputCountState - 1);
-      if (inputCount < 3) {
+      var elemInputDiv = document.createElement('div');
+      var elemInput = document.createElement('input');
+      var elemButton = document.createElement('button');
+  
+      elemInput.value = wordList[Math.floor(Math.random() * wordList.length)]
+  
+      elemButton.innerHTML = "Remove";
+      elemButton.onclick = function () {
+        this.parentElement.remove();
+        var elemInputs = document.getElementsByTagName('input');
+        var inputCount = elemInputs.length;
+        setInputCountState(inputCountState - 1);
+        if (inputCount < 3) {
+          var elemSpinButton = document.getElementById('spinButton');
+          elemSpinButton.disabled = true;
+        }
+  
+      };
+      elemInputDiv.appendChild(elemInput);
+      elemInputDiv.appendChild(elemButton);
+      optionDiv.appendChild(elemInputDiv);
+  
+      setInputCountState(inputCountState + 1);
+  
+      if (inputCount >= 2) {
+  
         var elemSpinButton = document.getElementById('spinButton');
-        elemSpinButton.disabled = true;
+        elemSpinButton.disabled = false;
+  
       }
-
-    };
-    elemInputDiv.appendChild(elemInput);
-    elemInputDiv.appendChild(elemButton);
-    optionDiv.appendChild(elemInputDiv);
-
-    setInputCountState(inputCountState + 1);
-
-    if (inputCount >= 2) {
-
-      var elemSpinButton = document.getElementById('spinButton');
-      elemSpinButton.disabled = false;
-
     }
-  }
+    */
 
   return (
     <div className="App">
@@ -181,7 +204,7 @@ function App() {
 
       <canvas id="myCanvas" width="400" height="400" style={{ border: '1px solid #000000' }}>
       </canvas>
-      <button id="spinButton" onClick={handleSpin} disabled={inputCountState < 3}>
+      <button id="spinButton" onClick={handleSpin} /*disabled={inputCountState < 3}*/>
         Spin wheel
       </button>
 
@@ -189,6 +212,16 @@ function App() {
         Add Option
       </button>
       <div id="options">
+        {inputList.map((element, index) => (
+          <div>
+            <input name="option" value={element.option || ""} onChange={e => handleChange(index, e)}>
+            </input>
+            <button onClick={() => removeOption(index)}>
+              Remove
+          </button>
+          </div>
+        ))
+        }
       </div>
 
     </div>
