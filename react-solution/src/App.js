@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 function App() {
 
   const localInputs = JSON.parse(localStorage.getItem('options'));
-  const [inputList, setInputListState] = useState(localInputs);
+  const [inputList, setInputListState] = useState(localInputs != null ? localInputs : []);
   const [selectedSector, setSelectetdSector] = useState(0);
   const width = 200;
   const spinSpeed = 1;
