@@ -4,9 +4,20 @@ import React, { useState } from 'react';
 
 function App() {
 
-  const [inputList, setInputListState] = useState([{ option: "first" }]);
-
-  var wordList = [
+  const localInputs = JSON.parse(localStorage.getItem('options'));
+  const [inputList, setInputListState] = useState(localInputs);
+  const [selectedSector, setSelectetdSector] = useState(0);
+  const width = 200;
+  const spinSpeed = 1;
+  const colorList = [
+    "cc004c",
+    "f37021",
+    "fcb711",
+    "0db14b",
+    "0089d0",
+    "6460aa"
+  ];
+  const wordList = [
     "rifle",
     "move",
     "back",
@@ -20,6 +31,9 @@ function App() {
     "border",
     "rings",
   ]
+
+  var count = 0;
+
 
   let handleChange = (i, e) => {
     let newInputList = [...inputList];
@@ -39,65 +53,26 @@ function App() {
 
   }
 
-
-
-  var sectorCount = 2;
-  var width = 200;
-  var colorList = [
-    "cc004c",
-    "f37021",
-    "fcb711",
-    "0db14b",
-    "0089d0",
-    "6460aa",
-    "cc004c",
-    "f37021",
-    "fcb711",
-    "0db14b",
-    "0089d0",
-    "6460aa",
-  ];
-
-  var wheelOptions = [
-    "Test 1",
-    "Test 2",
-    "Test 3",
-    "Test 4",
-    "Test 5",
-    "Test 6",
-    "Test 7",
-    "Test 8",
-    "Test 9",
-    "Test 10",
-    "Test 11",
-    "Test 12"
-  ]
-
-
-  var count = 0;
-  var spinSpeed = 1;
-  var selectedSector = Math.floor(Math.random() * sectorCount);
-
-
   function init() {
     window.requestAnimationFrame(draw);
   }
 
   function draw() {
-    var angleOffset = ((2 * Math.PI) / 60) * count * spinSpeed;
 
+    var angleOffset = ((2 * Math.PI) / 60) * count * spinSpeed;
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
-
+    var sectorCount = inputList.length;
     var [centerX, centerY, radius] = [width, width, width]
+
     for (var i = 0; i < sectorCount; i++) {
       var sectorAngle = 360 / sectorCount;
       var startAngle = (sectorAngle * i) * (Math.PI / 180) + angleOffset;
       var endAngle = (sectorAngle * (i + 1)) * (Math.PI / 180) + angleOffset;
 
       ctx.beginPath();
-      ctx.fillStyle = "#" + colorList[i];
-      ctx.strokeStyle = "#" + colorList[i];
+      ctx.fillStyle = "#" + colorList[i % colorList.length];
+      ctx.strokeStyle = "#" + colorList[i % colorList.length];
       ctx.moveTo(centerX, centerY);
       ctx.arc(centerX, centerY, radius, startAngle, endAngle);
       ctx.lineTo(centerX, centerY);
@@ -109,7 +84,7 @@ function App() {
       ctx.fillStyle = "#000000";
       ctx.strokeStyle = "#000000";
       ctx.font = "16px Arial";
-      ctx.fillText(wheelOptions[i], 50, 10);
+      ctx.fillText(inputList[i].option, 50, 10);
       ctx.rotate(-(startAngle + 0.5 * (endAngle - startAngle)));
       ctx.translate(-width, -width);
 
@@ -127,7 +102,9 @@ function App() {
 
     if (count >= 100 && (currentAngle <= upperLimit && currentAngle >= lowerLimit)) {
       var elemWinner = document.getElementById('winner');
-      elemWinner.innerHTML = wheelOptions[selectedSector];
+      console.log(inputList);
+      console.log(selectedSector);
+      elemWinner.innerHTML = inputList[selectedSector].option;
 
     }
 
@@ -141,16 +118,11 @@ function App() {
 
   function handleSpin() {
     count = 0;
-    var elemInputs = document.getElementsByTagName('input');
-    sectorCount = elemInputs.length;
-    selectedSector = Math.floor(Math.random() * sectorCount);
-    wheelOptions = []
+    var sectorCount = inputList.length;
+    setSelectetdSector(Math.floor(Math.random() * sectorCount));
     var elemWinner = document.getElementById('winner');
     elemWinner.innerHTML = "";
-
-    for (var i = 0; i < sectorCount; i++) {
-      wheelOptions.push(elemInputs[i].value);
-    }
+    localStorage.setItem('options', JSON.stringify(inputList))
 
     init();
   }
