@@ -1,12 +1,12 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 
 function App() {
 
   const localInputs = JSON.parse(localStorage.getItem('options'));
   const [inputList, setInputListState] = useState(localInputs != null ? localInputs : []);
-  const [selectedSector, setSelectetdSector] = useState(0);
+  const [selectedSector, setSelectetdSector] = useState(-1);
   const width = 200;
   const spinSpeed = 1;
   const colorList = [
@@ -55,6 +55,7 @@ function App() {
 
   function init() {
     window.requestAnimationFrame(draw);
+    setSelectetdSector(-1);
   }
 
   function draw() {
@@ -121,13 +122,18 @@ function App() {
   function handleSpin() {
     count = 0;
     var sectorCount = inputList.length;
-    setSelectetdSector(Math.floor(Math.random() * sectorCount));
+    var choice = Math.floor(Math.random() * sectorCount)
+    setSelectetdSector(choice);
     var elemWinner = document.getElementById('winner');
     elemWinner.innerHTML = "";
     localStorage.setItem('options', JSON.stringify(inputList))
 
-    init();
   }
+  useEffect(() => {
+    if (selectedSector > -1) {
+      init();
+    }
+  }, [selectedSector])
   /*
     function addOption() {
       var optionDiv = document.getElementById('options');
