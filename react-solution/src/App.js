@@ -67,6 +67,11 @@ function App() {
     var [centerX, centerY, radius] = [width, width, width]
     const stringLimit = 15;
 
+    ctx.beginPath();
+    ctx.rect(0, 0, width * 2, width * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+
     for (var i = 0; i < sectorCount; i++) {
       var sectorAngle = 360 / sectorCount;
       var startAngle = (sectorAngle * i) * (Math.PI / 180) + angleOffset;
@@ -181,8 +186,9 @@ function App() {
 
       </div>
 
-      <canvas id="myCanvas" width="400" height="400" style={{ border: '1px solid #000000' }}>
+      <canvas id="myCanvas" width="400" height="400" >
       </canvas>
+      <br />
       <button id="spinButton" onClick={handleSpin} disabled={inputList.length < 3}>
         Spin wheel
       </button>
@@ -202,7 +208,8 @@ function App() {
         ))
         }
       </div>
-
+      <br />
+      <br />
     </div>
   );
 }
