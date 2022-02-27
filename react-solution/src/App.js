@@ -64,11 +64,13 @@ function App() {
     var ctx = c.getContext("2d");
     var sectorCount = inputList.length;
     var [centerX, centerY, radius] = [width, width, width]
+    const stringLimit = 15;
 
     for (var i = 0; i < sectorCount; i++) {
       var sectorAngle = 360 / sectorCount;
       var startAngle = (sectorAngle * i) * (Math.PI / 180) + angleOffset;
       var endAngle = (sectorAngle * (i + 1)) * (Math.PI / 180) + angleOffset;
+      let ending = inputList[i].option.length > stringLimit ? "..." : "";
 
       ctx.beginPath();
       ctx.fillStyle = "#" + colorList[i % colorList.length];
@@ -84,7 +86,7 @@ function App() {
       ctx.fillStyle = "#000000";
       ctx.strokeStyle = "#000000";
       ctx.font = "16px Arial";
-      ctx.fillText(inputList[i].option, 50, 10);
+      ctx.fillText(inputList[i].option.substring(0, stringLimit) + ending, 50, 10);
       ctx.rotate(-(startAngle + 0.5 * (endAngle - startAngle)));
       ctx.translate(-width, -width);
 
@@ -184,8 +186,8 @@ function App() {
       </button>
       <div id="options">
         {inputList.map((element, index) => (
-          <div>
-            <input name="option" value={element.option || ""} onChange={e => handleChange(index, e)}>
+          <div key={index}>
+            <input name="option" value={element.option || ""} onChange={e => handleChange(index, e)} onFocus={(event) => event.target.select()}>
             </input>
             <button onClick={() => removeOption(index)}>
               Remove
